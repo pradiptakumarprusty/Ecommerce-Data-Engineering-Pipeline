@@ -1,0 +1,16 @@
+order_id,customer_id,product_id,quantity,order_date,product_name,category,price,customer_name,email,city,state,total_amount
+O001,C001,P001,1,2026-08-01,Laptop,Electronics,55000,Rahul Sharma,rahul@gmail.com,Bhubaneswar,Odisha,55000
+O002,C002,P003,2,2026-08-02,Headphones,Electronics,2500,Priya Singh,priya@gmail.com,Cuttack,Odisha,5000
+O003,C003,P002,1,2026-08-03,Smartphone,Electronics,22000,Aman Kumar,aman@gmail.com,Pune,Maharashtra,22000
+O004,C004,P004,1,2026-08-04,Office Chair,Furniture,8500,Neha Das,neha@gmail.com,Bengaluru,Karnataka,8500
+O005,C005,P005,2,2026-08-05,Keyboard,Electronics,1800,Rohit Patel,rohit@gmail.com,Ahmedabad,Gujarat,3600
+O006,C006,P008,1,2026-08-06,Monitor,Electronics,12000,Ananya Mishra,ananya@gmail.com,Delhi,Delhi,12000
+O007,C007,P007,3,2026-08-07,Backpack,Accessories,1500,Vikas Singh,vikas@gmail.com,Mumbai,Maharashtra,4500
+O008,C008,P006,2,2026-08-08,Mouse,Electronics,900,Sneha Roy,sneha@gmail.com,Kolkata,West Bengal,1800
+O009,C009,P009,1,2026-08-09,Desk,Furniture,7000,Arjun Mehta,arjun@gmail.com,Jaipur,Rajasthan,7000
+O010,C010,P010,4,2026-08-10,USB Cable,Accessories,500,Pooja Nair,pooja@gmail.com,Kochi,Kerala,2000
+O011,C001,P003,1,2026-08-11,Headphones,Electronics,2500,Rahul Sharma,rahul@gmail.com,Bhubaneswar,Odisha,2500
+O012,C003,P005,3,2026-08-12,Keyboard,Electronics,1800,Aman Kumar,aman@gmail.com,Pune,Maharashtra,5400
+O013,C005,P002,1,2026-08-13,Smartphone,Electronics,22000,Rohit Patel,rohit@gmail.com,Ahmedabad,Gujarat,22000
+O014,C007,P008,2,2026-08-14,Monitor,Electronics,12000,Vikas Singh,vikas@gmail.com,Mumbai,Maharashtra,24000
+O015,C009,P007,2,2026-08-15,Backpack,Accessories,1500,Arjun Mehta,arjun@gmail.com,Jaipur,Rajasthan,3000
