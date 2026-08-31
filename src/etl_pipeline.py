@@ -1,4 +1,3 @@
-python
 import pandas as pd
 from pathlib import Path
 
@@ -85,7 +84,7 @@ def main():
     customers, products, orders = load_data()
     print("✓ Data extraction completed")
 
-    # Transform
+    # Clean
     customers, products, orders = clean_data(
         customers,
         products,
@@ -93,6 +92,7 @@ def main():
     )
     print("✓ Data cleaning completed")
 
+    # Transform
     final_data = transform_data(
         customers,
         products,
