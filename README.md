@@ -199,6 +199,6 @@ BCA Student | Data Engineering Enthusiast
 
 ## ⭐ Project Status
 
-**🚧 In Development**
+✅ Core Pipeline Completed
 
 This project is continuously being developed to demonstrate practical **Data Engineering, ETL, SQL, Spark, and Databricks** skills.

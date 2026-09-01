@@ -1,109 +1,142 @@
 import pandas as pd
-from pathlib import Path
+import os
+import logging
+# --------------------------------------------------
+# LOGGING CONFIGURATION
+# --------------------------------------------------
 
+os.makedirs("logs", exist_ok=True)
 
-# Project paths
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-OUTPUT_DIR = BASE_DIR / "output"
+logging.basicConfig(
+    filename="logs/etl_pipeline.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
-# Create output directory if it does not exist
-OUTPUT_DIR.mkdir(exist_ok=True)
+logger = logging.getLogger(__name__)
 
+logger.info("Starting E-Commerce ETL Pipeline")
 
-def load_data():
-    """Load raw e-commerce datasets."""
+print("Starting E-Commerce ETL Pipeline...")
 
-    customers = pd.read_csv(DATA_DIR / "customers.csv")
-    products = pd.read_csv(DATA_DIR / "products.csv")
-    orders = pd.read_csv(DATA_DIR / "orders.csv")
+# --------------------------------------------------
+# 1. DATA EXTRACTION
+# --------------------------------------------------
 
-    return customers, products, orders
+try:
+    customers = pd.read_csv("data/customers.csv")
+    products = pd.read_csv("data/products.csv")
+    orders = pd.read_csv("data/orders.csv")
 
-
-def clean_data(customers, products, orders):
-    """Clean and validate the datasets."""
-
-    # Remove duplicate records
-    customers = customers.drop_duplicates()
-    products = products.drop_duplicates()
-    orders = orders.drop_duplicates()
-
-    # Remove rows with missing values
-    customers = customers.dropna()
-    products = products.dropna()
-    orders = orders.dropna()
-
-    return customers, products, orders
-
-
-def transform_data(customers, products, orders):
-    """Join customer, product, and order data."""
-
-    # Join orders with products
-    orders_products = orders.merge(
-        products,
-        on="product_id",
-        how="left"
-    )
-
-    # Join with customers
-    final_data = orders_products.merge(
-        customers,
-        on="customer_id",
-        how="left"
-    )
-
-    # Calculate total order value
-    final_data["total_amount"] = (
-        final_data["quantity"] * final_data["price"]
-    )
-
-    return final_data
-
-
-def save_data(final_data):
-    """Save processed data."""
-
-    output_file = OUTPUT_DIR / "ecommerce_processed.csv"
-
-    final_data.to_csv(
-        output_file,
-        index=False
-    )
-
-    print(f"Processed data saved to: {output_file}")
-
-
-def main():
-    """Run the complete ETL pipeline."""
-
-    print("Starting E-Commerce ETL Pipeline...")
-
-    # Extract
-    customers, products, orders = load_data()
     print("✓ Data extraction completed")
+    logger.info("Data extraction completed")
 
-    # Clean
-    customers, products, orders = clean_data(
-        customers,
-        products,
-        orders
-    )
-    print("✓ Data cleaning completed")
+except FileNotFoundError as e:
+    print("❌ Error: Required data file not found.")
+    logger.error(f"Data extraction failed: {e}")
+    exit()
 
-    # Transform
-    final_data = transform_data(
-        customers,
-        products,
-        orders
-    )
-    print("✓ Data transformation completed")
+except Exception as e:
+    print("❌ Error while extracting data:", e)
+    logger.error(f"Data extraction failed: {e}")
+    exit()
 
-    # Load
-    save_data(final_data)
-    print("✓ ETL Pipeline completed successfully")
+# --------------------------------------------------
+# 2. DATA QUALITY VALIDATION
+# --------------------------------------------------
+
+print("\nRunning data quality checks...")
+
+# Check missing values
+print("\nMissing values:")
+
+print("Customers:")
+print(customers.isnull().sum())
+
+print("\nProducts:")
+print(products.isnull().sum())
+
+print("\nOrders:")
+print(orders.isnull().sum())
 
 
-if __name__ == "__main__":
-    main()
+# Check duplicate records
+print("\nDuplicate records:")
+
+print("Customers:", customers.duplicated().sum())
+print("Products:", products.duplicated().sum())
+print("Orders:", orders.duplicated().sum())
+
+
+# Check negative / invalid values
+if "price" in products.columns:
+    invalid_products = (products["price"] < 0).sum()
+    print("\nInvalid product prices:", invalid_products)
+
+if "quantity" in orders.columns:
+    invalid_quantity = (orders["quantity"] <= 0).sum()
+    print("Invalid order quantities:", invalid_quantity)
+
+
+print("\n✓ Data quality validation completed")
+
+logger.info("Data quality validation completed")
+
+# --------------------------------------------------
+# 3. DATA CLEANING
+# --------------------------------------------------
+
+customers = customers.drop_duplicates()
+products = products.drop_duplicates()
+orders = orders.drop_duplicates()
+
+# Fill missing values
+customers = customers.fillna("Unknown")
+products = products.fillna("Unknown")
+
+if "quantity" in orders.columns:
+    orders["quantity"] = orders["quantity"].fillna(0)
+
+print("✓ Data cleaning completed")
+
+logger.info("Data cleaning completed")
+
+# --------------------------------------------------
+# 4. DATA TRANSFORMATION
+# --------------------------------------------------
+
+if "quantity" in orders.columns and "price" in orders.columns:
+    orders["total_amount"] = orders["quantity"] * orders["price"]
+
+print("✓ Data transformation completed")
+
+logger.info("Data transformation completed")
+
+
+# --------------------------------------------------
+# 5. SAVE PROCESSED DATA
+# --------------------------------------------------
+
+output_folder = "processed_data"
+
+os.makedirs(output_folder, exist_ok=True)
+
+customers.to_csv(
+    os.path.join(output_folder, "customers_processed.csv"),
+    index=False
+)
+
+products.to_csv(
+    os.path.join(output_folder, "products_processed.csv"),
+    index=False
+)
+
+orders.to_csv(
+    os.path.join(output_folder, "orders_processed.csv"),
+    index=False
+)
+
+print("\nProcessed data saved to:", output_folder)
+
+print("\nETL Pipeline completed successfully!")
+logger.info("ETL Pipeline completed successfully")
