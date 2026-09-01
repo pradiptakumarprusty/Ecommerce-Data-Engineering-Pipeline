@@ -1,35 +1,60 @@
-# 🛒 E-Commerce Data Engineering Pipeline
+# 🛒 E-Commerce Data Engineering & Analytics Pipeline
 
 ## 📌 Project Overview
 
-This project demonstrates an end-to-end **E-Commerce Data Engineering Pipeline** designed to process, transform, and analyze customer, product, and order data.
+This project demonstrates an end-to-end **E-Commerce Data Engineering and Analytics Pipeline** built to process, validate, transform, store, and analyze customer, product, and order data.
 
-The project focuses on building a structured data pipeline using **Python, SQL, Apache Spark, Databricks, and Delta Lake** concepts to transform raw e-commerce datasets into reliable and analytics-ready data.
+The project uses **Python, Pandas, SQL, SQLite, and Streamlit** to transform raw CSV data into structured, analytics-ready data and interactive business insights.
 
 ---
 
 ## 🎯 Project Objectives
 
-* Process raw e-commerce datasets efficiently.
-* Clean and transform customer, product, and order data.
-* Build a scalable ETL pipeline.
-* Perform data validation and quality checks.
-* Use SQL for data analysis and business insights.
-* Apply Apache Spark for large-scale data processing.
-* Implement modern Data Engineering concepts using Databricks.
-* Prepare transformed data for analytics and reporting.
+* Build an end-to-end ETL pipeline using Python and Pandas.
+* Perform data quality validation and cleaning.
+* Remove duplicate records and handle missing values.
+* Transform raw order data and calculate business metrics.
+* Store structured data in a SQLite database.
+* Perform SQL-based business analysis.
+* Build an interactive Streamlit analytics dashboard.
+* Maintain the project using Git and GitHub.
 
 ---
 
 ## 📂 Dataset
 
-The project currently contains three primary datasets:
+The project uses three primary datasets:
 
 | Dataset         | Description                                |
 | --------------- | ------------------------------------------ |
 | `customers.csv` | Customer information                       |
 | `products.csv`  | Product details and pricing                |
 | `orders.csv`    | Customer order and transaction information |
+
+### Dataset Columns
+
+**Customers**
+
+* `customer_id`
+* `customer_name`
+* `email`
+* `city`
+* `state`
+
+**Products**
+
+* `product_id`
+* `product_name`
+* `category`
+* `price`
+
+**Orders**
+
+* `order_id`
+* `customer_id`
+* `product_id`
+* `quantity`
+* `order_date`
 
 ---
 
@@ -38,17 +63,21 @@ The project currently contains three primary datasets:
 ```text
 Raw CSV Data
      ↓
-Data Ingestion
+Data Extraction
      ↓
-Data Cleaning & Validation
+Data Quality Validation
+     ↓
+Data Cleaning
      ↓
 Data Transformation
      ↓
-Apache Spark / SQL
+Processed CSV Data
      ↓
-Delta Lake
+SQLite Database
      ↓
-Analytics & Reporting
+SQL Analytics
+     ↓
+Streamlit Dashboard
 ```
 
 ---
@@ -56,14 +85,12 @@ Analytics & Reporting
 ## 🛠️ Technologies Used
 
 * **Python**
-* **SQL**
-* **MySQL**
-* **Apache Spark**
-* **Databricks**
-* **Delta Lake**
-* **Unity Catalog**
-* **Git & GitHub**
 * **Pandas**
+* **SQL**
+* **SQLite**
+* **Streamlit**
+* **Git**
+* **GitHub**
 
 ---
 
@@ -71,76 +98,112 @@ Analytics & Reporting
 
 ### 1. Extract
 
-Raw data is collected from CSV files containing customer, product, and order information.
+The pipeline reads customer, product, and order data from CSV files using Pandas.
 
-### 2. Transform
+### 2. Validate
 
-The data is cleaned and transformed by:
+Data quality checks are performed for:
 
-* Handling missing values
-* Removing duplicate records
-* Validating data types
-* Standardizing columns
-* Joining related datasets
-* Creating derived business metrics
+* Missing values
+* Duplicate records
+* Invalid product prices
+* Invalid order quantities
 
-### 3. Load
+### 3. Clean
 
-The transformed datasets are prepared for storage in analytics-ready tables and can be managed using **Delta Lake and Databricks**.
+The pipeline:
+
+* Removes duplicate records
+* Handles missing customer and product values
+* Handles missing order quantities
+
+### 4. Transform
+
+Order data is transformed by calculating:
+
+```text
+total_amount = quantity × price
+```
+
+The transformed datasets are then saved into the `processed_data/` directory.
+
+### 5. Load
+
+The processed data is loaded into a **SQLite database** containing:
+
+* `customers`
+* `products`
+* `orders`
 
 ---
 
 ## 🗄️ Data Model
 
-The project uses relationships between the main entities:
-
 ```text
 Customers
     │
-    │ Customer ID
+    │ customer_id
     ↓
 Orders
     │
-    │ Product ID
+    │ product_id
     ↓
 Products
 ```
 
-This structure allows customer purchasing behavior, product performance, and order-level analysis.
+This relational structure enables customer, order, and product-level analysis.
 
 ---
 
-## 📊 Business Analysis
+## 📊 SQL Analytics
 
-The pipeline can be used to answer questions such as:
+The project includes SQL queries for business analysis such as:
 
-* What are the top-selling products?
-* Which customers generate the highest revenue?
-* What is the total order value?
-* Which products have the highest demand?
-* What is the average order value?
-* Which customers place the most orders?
-* What are the monthly sales trends?
+* Total revenue
+* Average order value
+* Top-selling products
+* Revenue by product category
+* Customer purchasing behavior
+* Daily sales trends
+* State-wise revenue
+* Order-level analysis
+
+SQL queries are available in:
+
+```text
+sql/analytics_queries.sql
+```
 
 ---
 
-## ⚙️ Data Engineering Concepts
+## 📈 Streamlit Dashboard
 
-This project demonstrates practical understanding of:
+An interactive **Streamlit dashboard** was developed to visualize key business metrics and sales insights.
 
-* ETL / ELT pipelines
-* Data ingestion
-* Data cleaning
-* Data transformation
-* Data validation
-* Relational data modeling
-* SQL analytics
-* Apache Spark processing
-* Delta Lake
-* Databricks
-* Medallion Architecture
-* Data quality
-* Git version control
+The dashboard provides:
+
+* Customer count
+* Order count
+* Products sold
+* Total revenue
+* Average order value
+* Revenue by category
+* Top-selling products
+* Daily revenue
+* Revenue by state
+* Order details
+
+Dashboard application:
+
+```text
+dashboard/app.py
+```
+
+### Run the Dashboard
+
+```bash
+python -m streamlit run dashboard/app.py
+```
 
 ---
 
@@ -154,34 +217,57 @@ Ecommerce-Data-Engineering-Pipeline/
 │   ├── products.csv
 │   └── orders.csv
 │
-├── notebooks/
-│   └──
+├── dashboard/
+│   └── app.py
+│
+├── processed_data/
+│   ├── customers_processed.csv
+│   ├── products_processed.csv
+│   └── orders_processed.csv
 │
 ├── sql/
-│   └──
+│   └── analytics_queries.sql
 │
 ├── src/
-│   └──
+│   └── etl_pipeline.py
 │
+├── database.py
 ├── README.md
 └── .gitignore
 ```
 
 ---
 
+## 🔐 Data Quality & Logging
+
+The ETL pipeline includes data validation and logging to improve reliability and traceability.
+
+The pipeline checks:
+
+* Missing values
+* Duplicate records
+* Invalid prices
+* Invalid quantities
+
+Pipeline logs are stored in:
+
+```text
+logs/etl_pipeline.log
+```
+
+---
+
 ## 🚀 Future Enhancements
 
-Planned improvements include:
+Future improvements may include:
 
-* Build a complete Python ETL pipeline.
-* Add Apache Spark transformations.
-* Implement Bronze, Silver, and Gold layers.
-* Store transformed data using Delta Lake.
-* Add data quality checks.
-* Create Databricks notebooks.
-* Build SQL analytics queries.
-* Create dashboards for business reporting.
-* Automate pipeline execution using Databricks Workflows.
+* Apache Spark implementation
+* Bronze, Silver, and Gold data layers
+* Delta Lake integration
+* Databricks implementation
+* Databricks Workflows automation
+* Advanced data quality monitoring
+* Additional business dashboards
 
 ---
 
@@ -193,12 +279,18 @@ BCA Student | Data Engineering Enthusiast
 
 ### Skills
 
-`Python` `SQL` `MySQL` `Apache Spark` `Databricks` `Delta Lake` `Git` `GitHub`
+`Python` `Pandas` `SQL` `SQLite` `Streamlit` `Databricks` `Apache Spark` `Delta Lake` `Git` `GitHub`
 
 ---
 
 ## ⭐ Project Status
 
-✅ Core Pipeline Completed
+**✅ Core Pipeline Completed**
 
-This project is continuously being developed to demonstrate practical **Data Engineering, ETL, SQL, Spark, and Databricks** skills.
+The project currently includes a functional Python ETL pipeline, data validation, SQLite database integration, SQL analytics, and an interactive Streamlit dashboard.
+
+---
+
+## 🔗 GitHub
+
+[View the complete project on GitHub](https://github.com/pradiptakumarprusty/Ecommerce-Data-Engineering-Pipeline)
