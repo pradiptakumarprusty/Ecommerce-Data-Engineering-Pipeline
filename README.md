@@ -238,9 +238,9 @@ Ecommerce-Data-Engineering-Pipeline/
 
 ---
 
-## 🔐 Data Quality & Logging
+## 🔐 Data Quality
 
-The ETL pipeline includes data validation and logging to improve reliability and traceability.
+The pipeline checks for the following data quality issues during processing.
 
 The pipeline checks:
 
@@ -249,7 +249,7 @@ The pipeline checks:
 * Invalid prices
 * Invalid quantities
 
-Pipeline logs are stored in:
+Pipeline logs are generated automatically when the ETL pipeline runs and are written to:
 
 ```text
 logs/etl_pipeline.log
@@ -279,7 +279,7 @@ BCA Student | Data Engineering Enthusiast
 
 ### Skills
 
-`Python` `Pandas` `SQL` `SQLite` `Streamlit` `Databricks` `Apache Spark` `Delta Lake` `Git` `GitHub`
+`Python` `Pandas` `SQL` `SQLite` `Streamlit` `Git` `GitHub`
 
 ---
 
